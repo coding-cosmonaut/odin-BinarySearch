@@ -10,14 +10,51 @@ class Node {
 
 class Tree {
   constructor(array) {
-    this.array = array;
+    this.array = mergeSort(array);
     this.root = this.buildTree(array);
   }
   buildTree(arr) {
-    const sortedArr = mergeSort(arr);
+    //check for duplicates
+    const filteredArr = this.array.filter(
+      (value, index) => this.array.indexOf(value) === index
+    );
+    //check for duplicates
 
-    
+    //finding the root/middle and creating new tree
+    const root = Math.floor(filteredArr.length / 2);
 
+    const binarySearchTree = new Node(filteredArr[root]);
+    //finding the root/middle and creating new tree
+
+    //building Tree iteratively
+    let i = 0;
+    while (i < filteredArr.length) {
+      if (filteredArr[i] === filteredArr[root]) {
+        i++;
+        continue;
+      }
+      let current = binarySearchTree;
+      while (true) {
+        if (filteredArr[i] < current.value) {
+          if (current.left === null) {
+            current.left = new Node(filteredArr[i]);
+            break;
+          } else {
+            current = current.left;
+          }
+        } else if (filteredArr[i] > current.value) {
+          if (current.right === null) {
+            current.right = new Node(filteredArr[i]);
+            break;
+          } else {
+            current = current.right;
+          }
+        }
+      }
+      i++;
+    }
+    return binarySearchTree;
+    //building Tree
   }
 }
 
@@ -62,17 +99,61 @@ function mergeSort(unsortedArray = arrayOfData) {
   return mergedArray;
 }
 
-const firstTree = new Tree(arrayOfData);
+const prettyPrint = (node, prefix = "", isLeft = true) => {
+  if (node === null) {
+    return;
+  }
+  if (node.right !== null) {
+    prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+  }
+  console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
+  if (node.left !== null) {
+    prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+  }
+};
 
-// const prettyPrint = (node, prefix = "", isLeft = true) => {
-//   if (node === null) {
-//     return;
+const firstTree = new Tree(arrayOfData);
+console.log(firstTree.root, "first");
+
+console.log(prettyPrint(firstTree.root));
+
+//  buildTree(arr, rootObj) {
+//     //base case
+//     if (arr.length <= 1) {
+//       return arr;
+//     }
+//     //base case
+
+//     //finding the root/middle and creating new tree
+//     const root =
+//       arr.length % 2 !== 0
+//         ? arr[Math.floor(arr.length / 2)]
+//         : Math.floor((arr.length - 1) / 2);
+
+//     const binarySearchTree = new Node(arr[root]);
+//     //finding the root/middle and creating new tree
+
+//     //check for duplicates
+
+//     //check for duplicates
+
+//     //building Tree
+//     if (rootObj) {
+//       console.log("oinn");
+//       const newValueFromArr = arr[root];
+//       console.log(newValueFromArr, "NEW VALUE");
+//       if (newValueFromArr < rootObj.value) {
+//         rootObj.left = new Node(newValueFromArr);
+//       } else {
+//         rootObj.right = new Node(newValueFromArr);
+//       }
+//     }
+//     //building Tree
+
+//     //recursive
+//     this.buildTree(arr.slice(0, root), binarySearchTree);
+//     //const right = this.buildTree(sortedArr.slice(middleOfArr));
+//     //recursive
+//     console.log(rootObj, 'ROOT')
+//     return rootObj;
 //   }
-//   if (node.right !== null) {
-//     prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
-//   }
-//   console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
-//   if (node.left !== null) {
-//     prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
-//   }
-// };
